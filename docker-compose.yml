@@ -1,0 +1,31 @@
+version: '3'
+services:
+  server:
+    build: server
+    container_name: improvado_server
+    command: poetry run python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./server:/home/python/app
+    environment:
+      DEBUG: 'True'
+      SECRET: '#ziu)917!k^gs5%xg(qb99bkb)*n6*whggwcl51n9@m=7g25qi'
+      DBNAME: postgres
+      DBUSER: postgres
+      DBPASSWORD: 'postgres'
+      DBHOST: database
+      DBPORT: 5432
+    depends_on:
+      - database
+      - rabbitmq
+    ports:
+      - 8000:8000
+
+  database:
+    container_name: improvado_database
+    image: postgres:12.2
+    ports:
+    - 5432:5432
+
+  rabbitmq:
+    container_name: improvado_rabbitmq
+    image: rabbitmq:3.8.9-management

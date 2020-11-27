@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "improvado"
+version = "0.1.0"
+description = ""
+authors = ["Anton Petrov <marblemonolit@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.7"
+Django = "^3.1.3"
+django-rest-swagger = "^2.2.0"
+celery = "^5.0.2"
+djangorestframework = "^3.12.2"
+psycopg2 = "^2.8.6"
+django-filter = "^2.4.0"
+
+[tool.poetry.dev-dependencies]
+Fabric3 = "^1.14.post1"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
