@@ -1,4 +1,5 @@
 import requests
+from django.utils import timezone
 
 from server.celery import app
 from django.conf import settings
@@ -17,7 +18,8 @@ def update_openweathermap_data():
         if response.status_code == 200:
             data = response.json()
             series = Series(source='open weather map',
-                            temperature=data.get('temp'),
+                            temperature=data['main'].get('temp'),
+                            timestamp=timezone.now(),
                             city=city)
             series_list.append(series)
     Series.objects.bulk_create(series_list, ignore_conflicts=True)

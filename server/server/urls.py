@@ -29,5 +29,6 @@ SchemaView = get_schema_view(
 
 urlpatterns = [
     path('api/', SchemaView.with_ui('swagger', cache_timeout=0)),
-    path('api/v1/', include('api.urls.v1'))
+    path('api/v1/', include('api.urls.v1')),
+    path('api-auth/', include('rest_framework.urls', 'rest_framework'), name='login'),
 ]

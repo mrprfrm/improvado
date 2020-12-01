@@ -1,9 +1,11 @@
-from django.urls import path
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
 
-from cities.views import CityListCreateView
-from weather.views import SeriesListView
+from cities.views import CityViewSet
+
+router = DefaultRouter()
+router.register('cities', CityViewSet, 'cities')
 
 urlpatterns = [
-    path('cities', CityListCreateView.as_view(), name='cities'),
-    path('cities/<str:city_name>', SeriesListView.as_view(), name='series')
+    path('', include(router.urls))
 ]

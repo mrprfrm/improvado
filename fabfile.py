@@ -34,3 +34,7 @@ def migrate():
 
 def shell():
     local(f'docker exec -it {PROJECT_NAME}_server poetry run python manage.py shell')
+
+
+def createsuperuser():
+    local(f'docker exec -it {PROJECT_NAME}_server poetry run python manage.py createsuperuser')
