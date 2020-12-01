@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 import os
 from pathlib import Path
+from celery.schedules import crontab
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -27,8 +28,14 @@ DEBUG = os.getenv('DEBUG', 'True').lower() == 'true'
 
 ALLOWED_HOSTS = []
 
+# 3rd party API definition
+
+OPENWEATHERMAP_TOKEN = os.getenv('OPENWEATHERMAP_TOKEN', '')
+OPENWEATHERMAP_URL = 'http://api.openweathermap.org/data/2.5/weather'
 
 # Application definition
+
+from django.shortcuts import resolve_url
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -37,6 +44,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'rest_framework',
+    'drf_yasg',
+    'celery',
+    
+    'cities',
+    'weather',
+    'api'
 ]
 
 MIDDLEWARE = [
@@ -122,3 +137,14 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# Celery definition
+
+BROKER_URL = os.getenv('BROKER_URL', '')
+
+CELERYBEAT_SCHEDULE = {
+    'update-weather': {
+        'task': 'weather.tasks.update_openweathermap_data',
+        'schedule': crontab()
+    }
+}

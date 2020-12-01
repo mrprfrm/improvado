@@ -13,6 +13,7 @@ services:
       DBUSER: postgres
       DBPASSWORD: 'postgres'
       DBHOST: database
+      BROKER_URL: 'amqp://user:password@rabbitmq:5672'
       DBPORT: 5432
     depends_on:
       - database
@@ -20,12 +21,37 @@ services:
     ports:
       - 8000:8000
 
+  celery:
+    build: server
+    container_name: improvado_celery
+    command: poetry run celery -A server worker -B --hostname 0.0.0.0 -l debug
+    volumes:
+      - ./server:/home/python/app
+    environment:
+      DEBUG: 'True'
+      SECRET: '#ziu)917!k^gs5%xg(qb99bkb)*n6*whggwcl51n9@m=7g25qi'
+      DBNAME: postgres
+      DBUSER: postgres
+      DBPASSWORD: 'postgres'
+      DBHOST: database
+      DBPORT: 5432
+      BROKER_URL: 'amqp://user:password@rabbitmq:5672'
+      OPENWEATHERMAP_TOKEN: 'e7c0c6afee42db049f6e4a0af6ae3a26'
+    depends_on:
+      - database
+      - rabbitmq
+
   database:
     container_name: improvado_database
     image: postgres:12.2
+    environment:
+      - POSTGRES_PASSWORD=postgres
     ports:
     - 5432:5432
 
   rabbitmq:
     container_name: improvado_rabbitmq
     image: rabbitmq:3.8.9-management
+    environment:
+      RABBITMQ_DEFAULT_USER: 'user'
+      RABBITMQ_DEFAULT_PASS: 'password'
